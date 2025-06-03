@@ -3,13 +3,12 @@ package helper
 import (
 	"log"
 	"math"
-
 	"math/cmplx"
 
 	"gonum.org/v1/gonum/dsp/fourier"
 )
 
-func Fingerprint(sample []int) {
+func Fingerprint(sample []int) []Fingerprinting {
 	print("Fingerprinting audio data...\n")
 
 	//Normalization of the sample data
@@ -29,9 +28,9 @@ func Fingerprint(sample []int) {
 
 	print("Filtered sample:", len(filteredSample), "samples\n")
 
-	for i := 0; i < 100 && i < len(filteredSample); i++ {
-		println("Sample", i, ":", filteredSample[i])
-	}
+	// for i := 0; i < 100 && i < len(filteredSample); i++ {
+	// 	println("Sample", i, ":", filteredSample[i])
+	// }
 
 	//Then downsampling is done to reduce the sample rate
 	// from 44100 Hz to 11025 Hz
@@ -52,6 +51,22 @@ func Fingerprint(sample []int) {
 
 	spectrogram := FFTFrames(windowed)
 	print("Spectrogram generated with: ", len(spectrogram), " frames\n")
+
+	// Detect peaks in the spectrogram
+	// Divide the frequency bins into 6 bands
+	peaks := DetectPeaks(spectrogram, 6) // Divide into 6 bands
+	println("Detected", len(peaks), "peaks")
+
+	// for _, p := range peaks {
+	// 	fmt.Printf("Frame: %d, Bin: %d, Amp: %.6f\n", p.FrameIndex, p.FrequencyBin, p.Amplitude)
+
+	// }
+	//Generating Hash for anchor peak
+	// print(GenerateFingerprints(peaks))
+	fingerprints := GenerateFingerprints(peaks)
+
+	return fingerprints
+
 }
 
 func FFTFrames(frames [][]float64) [][]float64 {
