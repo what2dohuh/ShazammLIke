@@ -50,9 +50,6 @@ Shazamm is a lightweight audio fingerprinting project inspired by [Shazam](https
    - When a new audio sample is given, generate its fingerprint.
    - Compare with database hashes to find the best match.
 
----
-
-## 📦 Usage
 
 ```bash
 go run main.go
